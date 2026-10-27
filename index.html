@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>極簡白 M.W. Studio — Editorial Experiment Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            white: '#FFFFFF',
+                            black: '#111111',
+                            gray: '#8C8C8C',
+                            cobalt: '#365CFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        display: ['Impact', 'Syne', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- GSAP & ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Smooth Scroll & Selection Styling */
+        ::selection {
+            background-color: #365CFF;
+            color: #FFFFFF;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #365CFF;
+            border-radius: 3px;
+        }
+
+        /* Custom Cursor Style (Desktop only) */
+        @media (min-width: 1024px) {
+            body {
+                cursor: default;
+            }
+            .custom-cursor {
+                pointer-events: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 9999;
+                transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Typography & Layout Experiments */
+        .text-huge {
+            font-size: clamp(3.5rem, 12vw, 15rem);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+        }
+        .editorial-stroke {
+            -webkit-text-stroke: 1.5px #111111;
+            color: transparent;
+        }
+        .editorial-stroke-white {
+            -webkit-text-stroke: 1.5px #FFFFFF;
+            color: transparent;
+        }
+
+        /* Interactive Typography Characters */
+        .interactive-title .char {
+            display: inline-block;
+            will-change: transform, opacity;
+            transition: color 0.3s ease;
+            transform-origin: center bottom;
+            cursor: pointer;
+        }
+
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(17, 17, 17, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(17, 17, 17, 0.05) 1px, transparent 1px);
+        }
+
+        /* Service Cards Custom Interactive Styles */
+        .svc-preview-box {
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-brand-white text-brand-black font-sans antialiased overflow-x-hidden selection:bg-brand-cobalt selection:text-white">
+
+    <!-- Custom Pointer Ball for Desktop -->
+    <div id="cursor" class="custom-cursor hidden lg:block w-4 h-4 bg-brand-cobalt rounded-full mix-blend-difference pointer-events-none fixed"></div>
+
+    <!-- 1. NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-brand-white/80 backdrop-blur-md border-b border-brand-black/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#" class="group flex items-center space-x-3">
+                <span class="w-3 h-3 bg-brand-cobalt inline-block transition-transform duration-300 group-hover:scale-150"></span>
+                <span class="font-extrabold text-xl tracking-tighter">M.W. STUDIO</span>
+                <span class="text-xs text-brand-gray tracking-widest hidden sm:inline-block">/ 極簡白</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex space-x-8 text-xs font-bold tracking-widest uppercase">
+                <a href="#about" class="hover:text-brand-cobalt transition-colors duration-200 py-1 border-b-2 border-transparent hover:border-brand-cobalt">ABOUT</a>
+                <a href="#services" class="hover:text-brand-cobalt transition-colors duration-200 py-1 border-b-2 border-transparent hover:border-brand-cobalt">SERVICES</a>
+                <a href="#works" class="hover:text-brand-cobalt transition-colors duration-200 py-1 border-b-2 border-transparent hover:border-brand-cobalt">WORKS</a>
+                <a href="#contact" class="hover:text-brand-cobalt transition-colors duration-200 py-1 border-b-2 border-transparent hover:border-brand-cobalt">CONTACT</a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="menu-btn" class="md:hidden p-2 text-brand-black focus:outline-none" aria-label="Toggle Menu">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu Overlay -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-black text-brand-white px-6 py-8 space-y-6 flex flex-col font-bold tracking-widest">
+            <a href="#about" class="mobile-link text-xl hover:text-brand-cobalt">ABOUT</a>
+            <a href="#services" class="mobile-link text-xl hover:text-brand-cobalt">SERVICES</a>
+            <a href="#works" class="mobile-link text-xl hover:text-brand-cobalt">WORKS</a>
+            <a href="#contact" class="mobile-link text-xl hover:text-brand-cobalt">CONTACT</a>
+        </div>
+    </header>
+
+    <main class="w-full">
+
+        <!-- 2. HERO SECTION -->
+        <section id="hero" class="min-h-screen pt-28 pb-16 px-6 relative flex flex-col justify-between bg-grid-pattern overflow-hidden">
+            <!-- Decorative Geo Shapes -->
+            <div class="hero-geo absolute top-1/4 right-10 w-48 h-48 md:w-80 md:h-80 bg-brand-cobalt/10 border border-brand-cobalt rounded-full pointer-events-none -z-10 animate-pulse"></div>
+            <div class="hero-geo absolute bottom-20 left-12 w-32 h-32 bg-brand-black/5 -rotate-12 pointer-events-none -z-10"></div>
+
+            <div class="max-w-7xl mx-auto w-full flex-grow flex flex-col justify-center my-auto">
+                <!-- Subtitle / Meta Header -->
+                <div class="hero-meta flex flex-wrap items-center gap-4 text-xs font-bold tracking-widest text-brand-gray mb-6">
+                    <span class="px-2 py-1 bg-brand-black text-brand-white">INDEPENDENT DESIGN STUDIO</span>
+                    <span>DESIGN / EXPERIMENT</span>
+                    <span class="text-brand-cobalt">● TAIPEI</span>
+                </div>
+
+                <!-- Main Hero Typography -->
+                <div class="relative">
+                    <h1 id="hero-interactive-title" class="hero-title interactive-title text-huge font-black uppercase font-display tracking-tighter select-none">
+                        <div class="hero-line overflow-hidden py-1"><span class="line-inner inline-block">WHITE IS</span></div>
+                        <div class="hero-line overflow-hidden flex items-center gap-4 py-1">
+                            <span class="line-inner inline-block text-brand-cobalt">NOT</span> 
+                            <span class="line-inner inline-block editorial-stroke">WHITE.</span>
+                        </div>
+                    </h1>
+
+                    <!-- Overlapping Chinese Brand Identity Block -->
+                    <div class="hero-sub font-bold text-2xl md:text-5xl tracking-tight text-brand-black mt-4 md:mt-8 flex items-baseline gap-4">
+                        <span class="bg-brand-cobalt text-brand-white px-3 py-1 font-mono text-sm tracking-widest">BRAND</span>
+                        <span class="font-extrabold">極簡白</span>
+                        <span class="text-sm font-normal text-brand-gray hidden sm:inline">/ 白並不是真的白。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator Footer -->
+            <div class="max-w-7xl mx-auto w-full flex justify-between items-end border-t border-brand-black/20 pt-6 mt-12 text-xs font-mono">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-brand-cobalt rounded-full animate-ping"></div>
+                    <span class="tracking-widest">EXPERIMENTAL EDITORIAL v2.6</span>
+                </div>
+                <div class="flex items-center space-x-2 cursor-pointer group" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">
+                    <span class="tracking-widest group-hover:text-brand-cobalt transition-colors">SCROLL TO EXPLORE</span>
+                    <i data-lucide="arrow-down-right" class="w-4 h-4 text-brand-cobalt group-hover:translate-x-1 group-hover:translate-y-1 transition-transform"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BRAND MANIFESTO (ABOUT) -->
+        <section id="about" class="py-24 px-6 bg-brand-black text-brand-white relative overflow-hidden">
+            <!-- Subtle Overlay Graphic -->
+            <div class="absolute right-0 bottom-0 text-brand-white/5 text-[20vw] font-black leading-none select-none pointer-events-none font-display">
+                M.W.
+            </div>
+
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <!-- Left Sticky Section Header -->
+                <div class="lg:col-span-4 lg:sticky lg:top-28">
+                    <div class="flex items-center space-x-2 text-brand-cobalt font-mono text-xs font-bold tracking-widest mb-4">
+                        <span>// 01</span>
+                        <span>BRAND MANIFESTO</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl font-black uppercase font-display tracking-tight leading-none mb-6">
+                        MANIFESTO /<br>
+                        <span class="editorial-stroke-white">品牌理念</span>
+                    </h2>
+                    <p class="text-brand-gray text-sm leading-relaxed">
+                        極簡白（M.W. Studio）是一家前衛的獨立設計工作室。我們跳脫商業模板的框架，以編輯實驗的角度解構視覺要素。
+                    </p>
+                </div>
+
+                <!-- Right Experimental Layout Copy -->
+                <div class="lg:col-span-8 space-y-16">
+                    <div class="manifesto-quote text-2xl md:text-5xl font-light leading-snug space-y-6">
+                        <p class="manifesto-line"><span class="text-brand-cobalt font-bold">「 白 </span> 不只是顏色。</p>
+                        <p class="manifesto-line pl-6 md:pl-16 border-l-2 border-brand-cobalt"><span class="font-bold underline decoration-brand-cobalt underline-offset-8">留白</span> 不是空白。</p>
+                        <p class="manifesto-line pl-2 md:pl-8">極簡不是停止探索。」</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-brand-gray text-sm leading-relaxed border-t border-brand-white/10 pt-12">
+                        <div>
+                            <h4 class="text-brand-white font-bold text-base mb-3 font-mono flex items-center">
+                                <span class="w-2 h-2 bg-brand-cobalt inline-block mr-2"></span>打破過度規律
+                            </h4>
+                            <p>
+                                在充斥模板化的數位浪潮中，我們主張透過實驗型排版與不對稱網格打破平庸。白是包容所有可能性的容器，而非單調的沉默。
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-brand-white font-bold text-base mb-3 font-mono flex items-center">
+                                <span class="w-2 h-2 bg-brand-cobalt inline-block mr-2"></span>視覺衝突的精準度
+                            </h4>
+                            <p>
+                                運用極致黑白張力與鮮明鈷藍色的局部重疊，我們為品牌建立獨一無二的視覺符號與溝通節奏，吸引最具眼光的世代。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SERVICES (UPGRADED 4 DISCIPLINES) -->
+        <section id="services" class="py-28 px-6 bg-brand-white border-b border-brand-black/10">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-black pb-6">
+                    <div>
+                        <div class="flex items-center space-x-2 text-brand-cobalt font-mono text-xs font-bold tracking-widest mb-2">
+                            <span>// 02</span>
+                            <span>WHAT WE DO.</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-black font-display uppercase tracking-tight">SERVICES / 服務項目</h2>
+                    </div>
+                    <p class="text-brand-gray text-xs sm:text-sm max-w-sm mt-4 md:mt-0 font-mono tracking-wider">
+                        [ FOUR DISCIPLINES. ENDLESS POSSIBILITIES. ]
+                    </p>
+                </div>
+
+                <!-- Vertical Full-width Experimental Service List -->
+                <div class="space-y-12">
+                    
+                    <!-- SERVICE 01: BRAND IDENTITY -->
+                    <div class="service-card group border-b border-brand-black/10 pb-12 hover:border-brand-cobalt transition-colors duration-300" data-service="1">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            <!-- Number & Title -->
+                            <div class="lg:col-span-5 space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-mono text-brand-cobalt font-extrabold tracking-widest px-2 py-0.5 border border-brand-cobalt/30">SERVICE 01</span>
+                                    <span class="text-xs font-mono text-brand-gray uppercase">// BRAND SYSTEM</span>
+                                </div>
+                                <h3 class="text-3xl md:text-5xl font-black font-display tracking-tight group-hover:text-brand-cobalt transition-colors duration-300">
+                                    BRAND IDENTITY
+                                </h3>
+                                <p class="text-lg font-bold text-brand-black">品牌識別設計</p>
+                                <p class="text-sm text-brand-gray leading-relaxed pt-2">
+                                    從品牌概念出發，將抽象理念轉化為具有辨識度的視覺系統，建立獨特且具有延展性的品牌語言。
+                                </p>
+
+                                <!-- Scope Tags -->
+                                <div class="pt-4 space-y-2">
+                                    <span class="text-[11px] font-mono font-bold text-brand-black block tracking-wider uppercase">[ 服務範圍 / SCOPE ]</span>
+                                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs font-mono text-brand-gray">
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>品牌概念與視覺方向提案</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>Logo 與標準字設計</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>品牌色彩與字體系統</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>基礎品牌識別規範</li>
+                                        <li class="flex items-center sm:col-span-2"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>名片、包裝及社群素材延伸應用</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Visual Preview (Geometric Assembly) -->
+                            <div class="lg:col-span-7">
+                                <div class="svc-preview-box w-full aspect-[16/9] bg-zinc-900 border border-brand-black/20 p-6 relative overflow-hidden flex items-center justify-center">
+                                    <!-- Dynamic Grid Background -->
+                                    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                    <div class="absolute top-4 left-4 text-[10px] font-mono text-brand-gray uppercase tracking-widest">[ INTERACTIVE // GEOMETRIC ASSEMBLY ]</div>
+
+                                    <!-- Interactive SVG Geometric Shapes -->
+                                    <svg id="svc-geo-svg" class="w-56 h-56 relative z-10" viewBox="0 0 200 200">
+                                        <!-- Outer Rotating Hexagon -->
+                                        <polygon id="geo-poly" points="100,20 169,60 169,140 100,180 31,140 31,60" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="4 4" class="transition-all duration-500"/>
+                                        <!-- Moving Inner Circle -->
+                                        <circle id="geo-circle" cx="100" cy="100" r="45" fill="none" stroke="#365CFF" stroke-width="3" />
+                                        <!-- Central Triangle -->
+                                        <polygon id="geo-tri" points="100,65 135,125 65,125" fill="none" stroke="#FFFFFF" stroke-width="2" />
+                                        <!-- Center Focal Point -->
+                                        <circle id="geo-dot" cx="100" cy="100" r="6" fill="#365CFF" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICE 02: POSTER & KEY VISUAL -->
+                    <div class="service-card group border-b border-brand-black/10 pb-12 hover:border-brand-cobalt transition-colors duration-300" data-service="2">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            <!-- Number & Title -->
+                            <div class="lg:col-span-5 space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-mono text-brand-cobalt font-extrabold tracking-widest px-2 py-0.5 border border-brand-cobalt/30">SERVICE 02</span>
+                                    <span class="text-xs font-mono text-brand-gray uppercase">// EXPERIMENTAL IMPACT</span>
+                                </div>
+                                <h3 class="text-3xl md:text-5xl font-black font-display tracking-tight group-hover:text-brand-cobalt transition-colors duration-300">
+                                    POSTER & KEY VISUAL
+                                </h3>
+                                <p class="text-lg font-bold text-brand-black">海報與主視覺設計</p>
+                                <p class="text-sm text-brand-gray leading-relaxed pt-2">
+                                    透過字體、影像、色彩與構圖進行視覺實驗，為活動、展覽與品牌企劃創造鮮明且具有記憶點的視覺印象。
+                                </p>
+
+                                <!-- Scope Tags -->
+                                <div class="pt-4 space-y-2">
+                                    <span class="text-[11px] font-mono font-bold text-brand-black block tracking-wider uppercase">[ 服務範圍 / SCOPE ]</span>
+                                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs font-mono text-brand-gray">
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>活動與展覽海報</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>品牌宣傳主視覺</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>音樂、文化與藝術企劃視覺</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>系列海報與宣傳素材</li>
+                                        <li class="flex items-center sm:col-span-2"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>印刷與社群平台尺寸延伸</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Visual Preview (Elastic Bounce Impact) -->
+                            <div class="lg:col-span-7">
+                                <div class="svc-preview-box w-full aspect-[16/9] bg-brand-black border border-brand-black/20 p-6 relative overflow-hidden flex flex-col items-center justify-center">
+                                    <div class="absolute top-4 left-4 text-[10px] font-mono text-brand-gray uppercase tracking-widest">[ INTERACTIVE // ELASTIC IMPACT ]</div>
+                                    
+                                    <!-- Dynamic Blue Block Overlay -->
+                                    <div id="poster-blue-bar" class="absolute w-full h-12 bg-brand-cobalt -rotate-12 transform scale-x-0 opacity-80 transition-transform duration-500"></div>
+
+                                    <!-- Elastic Text Elements -->
+                                    <div id="poster-bounce-text" class="relative z-10 text-center select-none cursor-pointer">
+                                        <div class="bounce-word text-4xl sm:text-6xl font-black font-display text-brand-white uppercase tracking-tighter">
+                                            <span>K</span><span>E</span><span>Y</span>
+                                        </div>
+                                        <div class="bounce-word text-4xl sm:text-6xl font-black font-display text-brand-cobalt uppercase tracking-tight editorial-stroke-white">
+                                            <span>V</span><span>I</span><span>S</span><span>U</span><span>A</span><span>L</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICE 03: EDITORIAL DESIGN -->
+                    <div class="service-card group border-b border-brand-black/10 pb-12 hover:border-brand-cobalt transition-colors duration-300" data-service="3">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            <!-- Number & Title -->
+                            <div class="lg:col-span-5 space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-mono text-brand-cobalt font-extrabold tracking-widest px-2 py-0.5 border border-brand-cobalt/30">SERVICE 03</span>
+                                    <span class="text-xs font-mono text-brand-gray uppercase">// GRID & TYPOGRAPHY</span>
+                                </div>
+                                <h3 class="text-3xl md:text-5xl font-black font-display tracking-tight group-hover:text-brand-cobalt transition-colors duration-300">
+                                    EDITORIAL DESIGN
+                                </h3>
+                                <p class="text-lg font-bold text-brand-black">編輯與刊物排版</p>
+                                <p class="text-sm text-brand-gray leading-relaxed pt-2">
+                                    重新組織文字、影像與資訊層級，運用網格、字體與留白創造具有節奏感的閱讀體驗，讓版面成為視覺敘事的一部分。
+                                </p>
+
+                                <!-- Scope Tags -->
+                                <div class="pt-4 space-y-2">
+                                    <span class="text-[11px] font-mono font-bold text-brand-black block tracking-wider uppercase">[ 服務範圍 / SCOPE ]</span>
+                                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs font-mono text-brand-gray">
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>雜誌與獨立刊物編排</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>書籍、作品集與企劃手冊排版</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>文字與圖片的編輯設計</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>版面網格與字體系統規劃</li>
+                                        <li class="flex items-center sm:col-span-2"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>印刷完稿與數位閱讀版面設計</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Visual Preview (Deconstructed Magazine Grid) -->
+                            <div class="lg:col-span-7">
+                                <div class="svc-preview-box w-full aspect-[16/9] bg-zinc-900 border border-brand-black/20 p-6 relative overflow-hidden flex items-center justify-center">
+                                    <div class="absolute top-4 left-4 text-[10px] font-mono text-brand-gray uppercase tracking-widest">[ INTERACTIVE // GRID DECONSTRUCTION ]</div>
+                                    
+                                    <!-- Editorial Spread Grid Columns -->
+                                    <div id="ed-grid-container" class="w-full max-w-md grid grid-cols-3 gap-4 font-mono text-xs text-brand-gray">
+                                        <div class="ed-col border-l border-brand-white/20 pl-3 space-y-2">
+                                            <div class="w-full h-1.5 bg-brand-cobalt"></div>
+                                            <p class="text-[10px] leading-tight text-white">COL 01 // GRID RHYTHM</p>
+                                            <div class="w-3/4 h-1 bg-brand-white/30"></div>
+                                            <div class="w-1/2 h-1 bg-brand-white/30"></div>
+                                        </div>
+                                        <div class="ed-col border-l border-brand-white/20 pl-3 space-y-2">
+                                            <div class="w-full h-12 bg-zinc-800 border border-brand-white/10 flex items-center justify-center text-[10px]">IMG_BLOCK</div>
+                                            <div class="w-full h-1 bg-brand-white/30"></div>
+                                            <div class="w-2/3 h-1 bg-brand-white/30"></div>
+                                        </div>
+                                        <div class="ed-col border-l border-brand-white/20 pl-3 space-y-2">
+                                            <div class="w-3/4 h-1 bg-brand-cobalt"></div>
+                                            <p class="text-[10px] text-brand-gray">MAGAZINE SPREAD V2.6</p>
+                                            <div class="w-full h-1 bg-brand-white/30"></div>
+                                            <div class="w-4/5 h-1 bg-brand-white/30"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICE 04: CHARACTER & IP DESIGN -->
+                    <div class="service-card group border-b border-brand-black/10 pb-12 hover:border-brand-cobalt transition-colors duration-300" data-service="4">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            <!-- Number & Title -->
+                            <div class="lg:col-span-5 space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-mono text-brand-cobalt font-extrabold tracking-widest px-2 py-0.5 border border-brand-cobalt/30">SERVICE 04</span>
+                                    <span class="text-xs font-mono text-brand-gray uppercase">// CHARACTER & IP</span>
+                                </div>
+                                <h3 class="text-3xl md:text-5xl font-black font-display tracking-tight group-hover:text-brand-cobalt transition-colors duration-300">
+                                    CHARACTER & IP DESIGN
+                                </h3>
+                                <p class="text-lg font-bold text-brand-black">角色與 IP 設計</p>
+                                <p class="text-sm text-brand-gray leading-relaxed pt-2">
+                                    從角色概念、造型與性格設定出發，創造具有個性與辨識度的原創角色，並延伸至品牌、社群與周邊應用。
+                                </p>
+
+                                <!-- Scope Tags -->
+                                <div class="pt-4 space-y-2">
+                                    <span class="text-[11px] font-mono font-bold text-brand-black block tracking-wider uppercase">[ 服務範圍 / SCOPE ]</span>
+                                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs font-mono text-brand-gray">
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>原創角色概念發想</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>角色造型與色彩設定</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>表情、姿勢及角色設定稿</li>
+                                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>角色基本背景與世界觀設定</li>
+                                        <li class="flex items-center sm:col-span-2"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block mr-2"></span>貼圖、社群素材與周邊視覺延伸</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Visual Preview (Character Eye Tracking & Floating) -->
+                            <div class="lg:col-span-7">
+                                <div id="ip-preview-box" class="svc-preview-box w-full aspect-[16/9] bg-zinc-900 border border-brand-black/20 p-6 relative overflow-hidden flex items-center justify-center cursor-pointer">
+                                    <div class="absolute top-4 left-4 text-[10px] font-mono text-brand-gray uppercase tracking-widest">[ INTERACTIVE // CHARACTER TRACKING ]</div>
+
+                                    <!-- Geometric Character Avatar -->
+                                    <div id="ip-character-head" class="w-40 h-40 bg-brand-black border-2 border-brand-cobalt relative flex flex-col items-center justify-center rounded-sm transition-transform duration-300 shadow-2xl">
+                                        <!-- Antenna -->
+                                        <div class="absolute -top-6 w-1 h-6 bg-brand-cobalt flex items-top justify-center">
+                                            <div class="w-3 h-3 bg-brand-cobalt rounded-full animate-ping"></div>
+                                        </div>
+
+                                        <!-- Eyes Container -->
+                                        <div class="flex space-x-6 mb-4">
+                                            <!-- Left Eye Socket -->
+                                            <div class="w-8 h-8 bg-zinc-800 border border-brand-white/30 rounded-full relative flex items-center justify-center overflow-hidden">
+                                                <div id="ip-eye-left" class="w-3.5 h-3.5 bg-brand-cobalt rounded-full"></div>
+                                            </div>
+                                            <!-- Right Eye Socket -->
+                                            <div class="w-8 h-8 bg-zinc-800 border border-brand-white/30 rounded-full relative flex items-center justify-center overflow-hidden">
+                                                <div id="ip-eye-right" class="w-3.5 h-3.5 bg-brand-white rounded-full"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Mouth -->
+                                        <div id="ip-mouth" class="w-10 h-1.5 bg-brand-cobalt rounded-full transition-all duration-300"></div>
+
+                                        <!-- Character Label -->
+                                        <span class="text-[9px] font-mono text-brand-gray absolute bottom-2">M.W. BOT v1.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SELECTED WORKS (PORTFOLIO WITH ASYMMETRIC GRID & MODAL) -->
+        <section id="works" class="py-28 px-6 bg-slate-50 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header & Dynamic Filter Buttons -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-brand-black/10 pb-6">
+                    <div>
+                        <div class="flex items-center space-x-2 text-brand-cobalt font-mono text-xs font-bold tracking-widest mb-2">
+                            <span>// 03</span>
+                            <span>CURATED ARCHIVE</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-black font-display uppercase tracking-tight">SELECTED WORKS</h2>
+                    </div>
+
+                    <!-- Category Filter Buttons -->
+                    <div class="flex flex-wrap gap-2 font-mono text-xs font-bold" id="filter-container">
+                        <button data-filter="all" class="filter-btn active px-4 py-2 border border-brand-black bg-brand-black text-white transition-all">ALL</button>
+                        <button data-filter="identity" class="filter-btn px-4 py-2 border border-brand-black bg-transparent text-brand-black hover:bg-brand-black hover:text-white transition-all">IDENTITY</button>
+                        <button data-filter="editorial" class="filter-btn px-4 py-2 border border-brand-black bg-transparent text-brand-black hover:bg-brand-black hover:text-white transition-all">EDITORIAL</button>
+                        <button data-filter="character" class="filter-btn px-4 py-2 border border-brand-black bg-transparent text-brand-black hover:bg-brand-black hover:text-white transition-all">CHARACTER</button>
+                    </div>
+                </div>
+
+                <!-- Asymmetric Works Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8" id="works-grid">
+
+                    <!-- Work 01: Concept Identity -->
+                    <div class="work-card md:col-span-7 group cursor-pointer" data-category="identity" onclick="openWorkModal(1)">
+                        <div class="relative overflow-hidden bg-brand-black aspect-[4/3] mb-4">
+                            <!-- SVG Decorative Mock Graphic -->
+                            <div class="w-full h-full flex items-center justify-center bg-zinc-900 group-hover:scale-105 transition-transform duration-700">
+                                <svg width="240" height="240" viewBox="0 0 200 200" class="transform group-hover:rotate-45 transition-transform duration-700">
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#365CFF" stroke-width="4" stroke-dasharray="10 5" />
+                                    <polygon points="100,20 170,160 30,160" fill="none" stroke="#FFFFFF" stroke-width="2" />
+                                    <text x="100" y="105" fill="#FFFFFF" font-size="12" font-family="monospace" text-anchor="middle">PROJECT / 01</text>
+                                </svg>
+                            </div>
+                            <div class="absolute top-4 left-4 bg-brand-cobalt text-white font-mono text-[10px] px-2 py-1 tracking-widest uppercase">
+                                CONCEPT // DEMO 01
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline border-b border-brand-black/20 pb-2">
+                            <div>
+                                <span class="text-xs font-mono text-brand-cobalt font-bold">IDENTITY</span>
+                                <h3 class="text-2xl font-black font-display group-hover:text-brand-cobalt transition-colors">NEO-CHROMA // 幾何新秩序</h3>
+                            </div>
+                            <span class="text-xs font-mono text-brand-gray group-hover:translate-x-1 transition-transform">VIEW PROJECT →</span>
+                        </div>
+                        <p class="text-xs text-brand-gray mt-2 font-mono">[ 概念作品 / 示範內容 ] 結合高對比幾何圖型與動態色彩規範的視覺識別系統。</p>
+                    </div>
+
+                    <!-- Work 02: Editorial Design -->
+                    <div class="work-card md:col-span-5 group cursor-pointer md:mt-16" data-category="editorial" onclick="openWorkModal(2)">
+                        <div class="relative overflow-hidden bg-brand-black aspect-[3/4] mb-4">
+                            <!-- SVG Decorative Mock Graphic -->
+                            <div class="w-full h-full flex items-center justify-center bg-zinc-800 group-hover:scale-105 transition-transform duration-700">
+                                <div class="text-center p-6 border border-brand-white/20">
+                                    <h4 class="text-brand-white font-display text-4xl font-black leading-none mb-2">VOICE<br><span class="text-brand-cobalt">ISSUE</span></h4>
+                                    <p class="text-brand-gray text-[10px] font-mono">EXPERIMENTAL LAYOUT</p>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 left-4 bg-brand-cobalt text-white font-mono text-[10px] px-2 py-1 tracking-widest uppercase">
+                                CONCEPT // DEMO 02
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline border-b border-brand-black/20 pb-2">
+                            <div>
+                                <span class="text-xs font-mono text-brand-cobalt font-bold">EDITORIAL</span>
+                                <h3 class="text-xl font-black font-display group-hover:text-brand-cobalt transition-colors">UNBOUND MAGAZINE // 解構特刊</h3>
+                            </div>
+                            <span class="text-xs font-mono text-brand-gray group-hover:translate-x-1 transition-transform">VIEW PROJECT →</span>
+                        </div>
+                        <p class="text-xs text-brand-gray mt-2 font-mono">[ 概念作品 / 示範內容 ] 不對稱雙語版面與網格錯位編排刊物。</p>
+                    </div>
+
+                    <!-- Work 03: Character IP -->
+                    <div class="work-card md:col-span-6 group cursor-pointer" data-category="character" onclick="openWorkModal(3)">
+                        <div class="relative overflow-hidden bg-brand-black aspect-[16/9] mb-4">
+                            <!-- SVG Decorative Mock Graphic -->
+                            <div class="w-full h-full flex items-center justify-center bg-brand-cobalt/20 group-hover:scale-105 transition-transform duration-700">
+                                <svg width="180" height="180" viewBox="0 0 100 100" class="text-brand-cobalt">
+                                    <rect x="25" y="25" width="50" height="50" fill="#111111" stroke="#365CFF" stroke-width="2" />
+                                    <circle cx="40" cy="45" r="5" fill="#365CFF" />
+                                    <circle cx="60" cy="45" r="5" fill="#FFFFFF" />
+                                    <rect x="35" y="60" width="30" height="4" fill="#FFFFFF" />
+                                </svg>
+                            </div>
+                            <div class="absolute top-4 left-4 bg-brand-cobalt text-white font-mono text-[10px] px-2 py-1 tracking-widest uppercase">
+                                CONCEPT // DEMO 03
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline border-b border-brand-black/20 pb-2">
+                            <div>
+                                <span class="text-xs font-mono text-brand-cobalt font-bold">CHARACTER IP</span>
+                                <h3 class="text-xl font-black font-display group-hover:text-brand-cobalt transition-colors">BLOCK 0.0 // 虛擬幾何生命體</h3>
+                            </div>
+                            <span class="text-xs font-mono text-brand-gray group-hover:translate-x-1 transition-transform">VIEW PROJECT →</span>
+                        </div>
+                        <p class="text-xs text-brand-gray mt-2 font-mono">[ 概念作品 / 示範內容 ] 結合極簡造型與數位潮玩特性的角色 IP 設定。</p>
+                    </div>
+
+                    <!-- Work 04: Concept Editorial (Extra Grid Balance) -->
+                    <div class="work-card md:col-span-6 group cursor-pointer" data-category="editorial" onclick="openWorkModal(4)">
+                        <div class="relative overflow-hidden bg-brand-black aspect-[16/9] mb-4">
+                            <div class="w-full h-full flex items-center justify-center bg-zinc-900 group-hover:scale-105 transition-transform duration-700">
+                                <div class="text-center">
+                                    <span class="text-6xl font-black font-display text-transparent border-text stroke-white editorial-stroke-white">POSTER</span>
+                                    <p class="text-xs font-mono text-brand-cobalt tracking-widest mt-2">GRAPHIC EXPERIMENT</p>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 left-4 bg-brand-cobalt text-white font-mono text-[10px] px-2 py-1 tracking-widest uppercase">
+                                CONCEPT // DEMO 04
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-baseline border-b border-brand-black/20 pb-2">
+                            <div>
+                                <span class="text-xs font-mono text-brand-cobalt font-bold">EDITORIAL</span>
+                                <h3 class="text-xl font-black font-display group-hover:text-brand-cobalt transition-colors">MANIFESTO POSTERS // 宣言海報系列</h3>
+                            </div>
+                            <span class="text-xs font-mono text-brand-gray group-hover:translate-x-1 transition-transform">VIEW PROJECT →</span>
+                        </div>
+                        <p class="text-xs text-brand-gray mt-2 font-mono">[ 概念作品 / 示範內容 ] 探討黑白文字動態與版面邊界的展覽海報。</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. CONTACT SECTION -->
+        <section id="contact" class="py-32 px-6 bg-brand-black text-brand-white relative overflow-hidden">
+            <!-- Accent Blue Flare/Shape -->
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-brand-cobalt rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+                    
+                    <div class="lg:col-span-8">
+                        <div class="flex items-center space-x-2 text-brand-cobalt font-mono text-xs font-bold tracking-widest mb-6">
+                            <span>// 04</span>
+                            <span>START A CONVERSATION</span>
+                        </div>
+                        <h2 class="text-huge font-black uppercase font-display tracking-tighter leading-none mb-8">
+                            LET'S MAKE<br>
+                            SOMETHING<br>
+                            <span class="text-brand-cobalt">UNEXPECTED.</span>
+                        </h2>
+                        <p class="text-brand-gray text-lg max-w-xl">
+                            準備好打破常規了嗎？歡迎與極簡白獨立設計工作室聯繫，展開具備實驗性與市場影響力的視覺合作。
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-4 space-y-8 bg-zinc-900/80 p-8 border border-brand-white/10 rounded-none">
+                        <div class="font-mono text-xs text-brand-gray">
+                            [ CONTACT INFORMATION PLACEHOLDER ]
+                        </div>
+                        
+                        <div>
+                            <span class="text-xs text-brand-gray block mb-1">EMAIL INQUIRIES</span>
+                            <a href="mailto:hello@mwstudio-example.com" class="text-xl font-bold hover:text-brand-cobalt transition-colors">hello@mwstudio-example.com</a>
+                        </div>
+
+                        <div>
+                            <span class="text-xs text-brand-gray block mb-1">STUDIO LOCATION</span>
+                            <p class="text-base">Taipei, Taiwan / Available Worldwide</p>
+                        </div>
+
+                        <div class="pt-4 border-t border-brand-white/10 flex space-x-6 text-sm font-mono">
+                            <a href="#" class="hover:text-brand-cobalt transition-colors">INSTAGRAM</a>
+                            <a href="#" class="hover:text-brand-cobalt transition-colors">BEHANCE</a>
+                            <a href="#" class="hover:text-brand-cobalt transition-colors">LINKEDIN</a>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <a href="mailto:hello@mwstudio-example.com" class="w-full inline-flex items-center justify-center space-x-3 bg-brand-cobalt text-white py-4 font-bold tracking-widest hover:bg-white hover:text-brand-black transition-all duration-300 group">
+                            <span>INITIATE PROJECT</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Footer Copyright Info -->
+                <div class="mt-28 pt-8 border-t border-brand-white/10 flex flex-col sm:flex-row justify-between text-xs font-mono text-brand-gray gap-4">
+                    <div>© 2026 M.W. STUDIO (極簡白). ALL RIGHTS RESERVED.</div>
+                    <div class="flex space-x-4">
+                        <span>CONCEPT DEMO MODE</span>
+                        <span>TAIPEI / TAIWAN</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 7. PROJECT DETAILS MODAL -->
+    <div id="project-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-brand-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300 p-4 md:p-8">
+        <div class="bg-brand-white text-brand-black w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 md:p-12 relative border border-brand-black">
+            <!-- Close Modal Button -->
+            <button onclick="closeWorkModal()" class="absolute top-6 right-6 p-2 bg-brand-black text-white hover:bg-brand-cobalt transition-colors" aria-label="Close modal">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Modal Dynamic Content Container -->
+            <div id="modal-content" class="space-y-6">
+                <!-- Javascript will inject project details dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & INTERACTION -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Sample Concept Projects Data
+        const projectsData = {
+            1: {
+                title: "NEO-CHROMA // 幾何新秩序",
+                category: "BRAND IDENTITY",
+                tag: "IDENTITY",
+                client: "概念實驗案例 (Concept Demo)",
+                year: "2026",
+                description: "本專案為極簡白對當代品牌視覺識別進行的解構實驗。我們摒棄傳統品牌規範手冊的定型架構，透過幾何圖形的動態重組，建立具備適應性的識別系統。色彩採用純黑與純白作為基底，搭配高飽和鈷藍色做為視覺記憶點。",
+                details: ["Dynamic Logo System", "Brand Typography", "Spatial Color Guidelines", "Digital Visual Guidelines"]
+            },
+            2: {
+                title: "UNBOUND MAGAZINE // 解構特刊",
+                category: "EDITORIAL DESIGN",
+                tag: "EDITORIAL",
+                client: "概念實驗案例 (Concept Demo)",
+                year: "2026",
+                description: "《UNBOUND》是一份探討數位時代與實體紙張邊界的試刊號。版面設計大膽採用跨欄錯位、超大級字體斷字與雙語對齊網格。透過大量的白空間襯托出黑體字型的強烈節奏感。",
+                details: ["320-Page Layout", "Custom Display Grid", "Special Ink Printing", "Experimental Typography"]
+            },
+            3: {
+                title: "BLOCK 0.0 // 虛擬幾何生命體",
+                category: "CHARACTER IP",
+                tag: "CHARACTER",
+                client: "概念實驗案例 (Concept Demo)",
+                year: "2026",
+                description: "BLOCK 0.0 是以極簡幾何方塊為核心語彙的原創角色 IP。拋棄繁複的裝飾細節，僅以點、線、面與鈷藍色焦點眼神展現情感變化，具備高度的周邊延伸性與 3D 潮流公仔開發潛力。",
+                details: ["3D Character Design", "Expression System", "Toy & Merchandising", "Motion Graphic Kit"]
+            },
+            4: {
+                title: "MANIFESTO POSTERS // 宣言海報系列",
+                category: "EDITORIAL DESIGN",
+                tag: "EDITORIAL",
+                client: "概念實驗案例 (Concept Demo)",
+                year: "2026",
+                description: "探討「白並不是真的白」品牌哲學的展覽海報系列。透過印刷加工（局部漆、打凹與燙銀）在純白紙材上創造光影質感差異，實現極簡但不單調的視覺體驗。",
+                details: ["Large Format Poster", "Tactile Print Design", "Typography Hierarchy", "Exhibition Display"]
+            }
+        };
+
+        // DOM Elements
+        const cursor = document.getElementById('cursor');
+        const filterBtns = document.querySelectorAll('#filter-container button');
+        const workCards = document.querySelectorAll('.work-card');
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // 1. Desktop Custom Pointer Movement
+        if (window.innerWidth >= 1024 && cursor) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+
+            // Scale cursor on hoverable elements
+            document.querySelectorAll('a, button, .work-card, .service-card').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(2.5)';
+                    cursor.style.backgroundColor = '#365CFF';
+                });
+                item.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    cursor.style.backgroundColor = '#365CFF';
+                });
+            });
+        }
+
+        // 2. Mobile Menu Toggle
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. Portfolio Works Category Filtering
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-brand-black', 'text-white');
+                    b.classList.add('bg-transparent', 'text-brand-black');
+                });
+                // Add active to current
+                btn.classList.add('active', 'bg-brand-black', 'text-white');
+                btn.classList.remove('bg-transparent', 'text-brand-black');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                workCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filterValue === 'all' || category === filterValue) {
+                        card.style.display = 'block';
+                        gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 });
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 4. Modal Open / Close Logic
+        function openWorkModal(id) {
+            const data = projectsData[id];
+            if (!data) return;
+
+            modalContent.innerHTML = `
+                <div class="flex items-center space-x-2 text-brand-cobalt font-mono text-xs font-bold tracking-widest">
+                    <span>${data.tag}</span>
+                    <span>// ${data.year}</span>
+                </div>
+                <h3 class="text-3xl md:text-5xl font-black font-display tracking-tight">${data.title}</h3>
+                <div class="flex flex-wrap gap-4 text-xs font-mono text-brand-gray border-y border-brand-black/10 py-3">
+                    <div>CLIENT: <span class="text-brand-black font-bold">${data.client}</span></div>
+                    <div>SERVICES: <span class="text-brand-black font-bold">${data.category}</span></div>
+                </div>
+                <p class="text-brand-black text-base leading-relaxed font-sans">${data.description}</p>
+                
+                <div class="bg-slate-100 p-6 border-l-4 border-brand-cobalt">
+                    <h4 class="font-bold text-xs font-mono uppercase tracking-widest mb-3">Deliverables / 交付項目</h4>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm font-mono text-brand-gray">
+                        ${data.details.map(item => `<li class="flex items-center space-x-2"><span class="w-1.5 h-1.5 bg-brand-cobalt inline-block"></span><span>${item}</span></li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="pt-4 flex justify-end">
+                    <button onclick="closeWorkModal()" class="px-6 py-3 bg-brand-black text-white text-xs font-mono font-bold tracking-widest hover:bg-brand-cobalt transition-colors">
+                        CLOSE PROJECT
+                    </button>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeWorkModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close Modal on clicking dark backdrop
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeWorkModal();
+            }
+        });
+
+        // 5. GSAP Animations & ScrollTriggers
+        window.addEventListener('load', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Split Hero Title into Interactive Characters
+            const heroTitle = document.getElementById('hero-interactive-title');
+            if (heroTitle) {
+                const lineInners = heroTitle.querySelectorAll('.line-inner');
+                lineInners.forEach(inner => {
+                    const text = inner.textContent;
+                    inner.innerHTML = '';
+                    // Preserving spaces by checking empty chars
+                    [...text].forEach(char => {
+                        const charSpan = document.createElement('span');
+                        charSpan.className = 'char';
+                        if (char === ' ') {
+                            charSpan.innerHTML = '&nbsp;';
+                        } else {
+                            charSpan.textContent = char;
+                        }
+                        inner.appendChild(charSpan);
+                    });
+                });
+
+                // Attach Elastic Dispersion Interaction to Characters
+                const allChars = heroTitle.querySelectorAll('.char');
+                
+                // Mouse Movement Dispersion physics within Hero
+                const heroSection = document.getElementById('hero');
+                
+                heroSection.addEventListener('mousemove', (e) => {
+                    if (window.innerWidth < 1024) return; // Disable complex physical dispersion on mobile
+                    
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+
+                    allChars.forEach(char => {
+                        const rect = char.getBoundingClientRect();
+                        const charCenterX = rect.left + rect.width / 2;
+                        const charCenterY = rect.top + rect.height / 2;
+
+                        const distX = mouseX - charCenterX;
+                        const distY = mouseY - charCenterY;
+                        const distance = Math.sqrt(distX * distX + distY * distY);
+                        
+                        const maxDistance = 180; // Radius of influence
+
+                        if (distance < maxDistance) {
+                            const power = (1 - distance / maxDistance);
+                            const forceX = (distX / distance) * power * -45; // Repulsion direction X
+                            const forceY = (distY / distance) * power * -45; // Repulsion direction Y
+                            const rotate = (distX / distance) * power * 25;
+                            const scale = 1 + power * 0.35;
+
+                            gsap.to(char, {
+                                x: forceX,
+                                y: forceY,
+                                rotation: rotate,
+                                scale: scale,
+                                duration: 0.3,
+                                ease: 'power2.out',
+                                overwrite: 'auto'
+                            });
+                        } else {
+                            // Return smoothly to origin
+                            gsap.to(char, {
+                                x: 0,
+                                y: 0,
+                                rotation: 0,
+                                scale: 1,
+                                duration: 0.8,
+                                ease: 'elastic.out(1.2, 0.4)',
+                                overwrite: 'auto'
+                            });
+                        }
+                    });
+                });
+
+                // Reset all characters when mouse leaves the section
+                heroSection.addEventListener('mouseleave', () => {
+                    gsap.to(allChars, {
+                        x: 0,
+                        y: 0,
+                        rotation: 0,
+                        scale: 1,
+                        duration: 1,
+                        ease: 'elastic.out(1.2, 0.4)',
+                        stagger: 0.02,
+                        overwrite: 'auto'
+                    });
+                });
+
+                // Direct Character Hover Wave Bounce Effect
+                allChars.forEach((char) => {
+                    char.addEventListener('mouseenter', () => {
+                        gsap.to(char, {
+                            y: -15,
+                            scale: 1.25,
+                            rotation: (Math.random() - 0.5) * 15,
+                            duration: 0.2,
+                            ease: 'power2.out',
+                            onComplete: () => {
+                                gsap.to(char, {
+                                    y: 0,
+                                    scale: 1,
+                                    rotation: 0,
+                                    duration: 0.8,
+                                    ease: 'elastic.out(1.4, 0.3)'
+                                });
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Hero Text Sequential Stagger Entry Animation
+            const heroTl = gsap.timeline();
+            heroTl.from('.hero-meta', { opacity: 0, y: -20, duration: 0.8, delay: 0.2 })
+                  .from('.hero-line .char', { 
+                      y: '120%', 
+                      opacity: 0, 
+                      duration: 0.9, 
+                      ease: 'back.out(1.7)', 
+                      stagger: 0.035 
+                  }, "-=0.4")
+                  .from('.hero-sub', { opacity: 0, x: -30, duration: 0.8, ease: 'power3.out' }, "-=0.5")
+                  .from('.hero-geo', { scale: 0, opacity: 0, duration: 1, ease: 'back.out(1.7)' }, "-=0.8");
+
+            // Manifesto Line Reveal on Scroll
+            gsap.from('.manifesto-line', {
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top 70%',
+                },
+                opacity: 0,
+                x: -40,
+                duration: 0.8,
+                stagger: 0.3,
+                ease: 'power3.out'
+            });
+
+            // Services Cards Entrance Animation
+            gsap.from('.service-card', {
+                scrollTrigger: {
+                    trigger: '#services',
+                    start: 'top 75%',
+                },
+                opacity: 0,
+                y: 40,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+
+            // ==========================================================
+            // NEW: DEDICATED INTERACTIVE ANIMATIONS FOR 4 SERVICES
+            // ==========================================================
+
+            // SERVICE 01: Geometric Assembly Hover Animation
+            const svc1 = document.querySelector('[data-service="1"]');
+            if (svc1) {
+                const geoPoly = document.getElementById('geo-poly');
+                const geoCircle = document.getElementById('geo-circle');
+                const geoTri = document.getElementById('geo-tri');
+                const geoDot = document.getElementById('geo-dot');
+
+                svc1.addEventListener('mouseenter', () => {
+                    gsap.to(geoPoly, { rotation: 90, scale: 1.1, transformOrigin: "center center", duration: 0.6, ease: "power2.out" });
+                    gsap.to(geoCircle, { r: 55, stroke: "#FFFFFF", duration: 0.5, ease: "back.out(1.7)" });
+                    gsap.to(geoTri, { rotation: -180, scale: 0.8, transformOrigin: "center center", duration: 0.6, ease: "power2.out" });
+                    gsap.to(geoDot, { scale: 2.2, fill: "#365CFF", duration: 0.4, ease: "back.out(2)" });
+                });
+
+                svc1.addEventListener('mouseleave', () => {
+                    gsap.to(geoPoly, { rotation: 0, scale: 1, duration: 0.6, ease: "power2.out" });
+                    gsap.to(geoCircle, { r: 45, stroke: "#365CFF", duration: 0.5, ease: "power2.out" });
+                    gsap.to(geoTri, { rotation: 0, scale: 1, duration: 0.6, ease: "power2.out" });
+                    gsap.to(geoDot, { scale: 1, fill: "#365CFF", duration: 0.4, ease: "power2.out" });
+                });
+            }
+
+            // SERVICE 02: Elastic Impact Bounce Animation
+            const svc2 = document.querySelector('[data-service="2"]');
+            if (svc2) {
+                const bounceSpans = document.querySelectorAll('#poster-bounce-text span');
+                const blueBar = document.getElementById('poster-blue-bar');
+
+                svc2.addEventListener('mouseenter', () => {
+                    gsap.to(blueBar, { scaleX: 1, duration: 0.4, ease: "power3.out" });
+                    gsap.to(bounceSpans, {
+                        y: -12,
+                        scaleY: 1.2,
+                        color: "#365CFF",
+                        stagger: 0.04,
+                        duration: 0.3,
+                        ease: "back.out(2)",
+                        onComplete: () => {
+                            gsap.to(bounceSpans, {
+                                y: 0,
+                                scaleY: 1,
+                                color: "",
+                                stagger: 0.03,
+                                duration: 0.6,
+                                ease: "elastic.out(1.2, 0.4)"
+                            });
+                        }
+                    });
+                });
+
+                svc2.addEventListener('mouseleave', () => {
+                    gsap.to(blueBar, { scaleX: 0, duration: 0.4, ease: "power3.in" });
+                    gsap.to(bounceSpans, { y: 0, scaleY: 1, color: "", duration: 0.4, ease: "power2.out" });
+                });
+            }
+
+            // SERVICE 03: Editorial Grid Deconstruction Animation
+            const svc3 = document.querySelector('[data-service="3"]');
+            if (svc3) {
+                const edCols = document.querySelectorAll('.ed-col');
+
+                svc3.addEventListener('mouseenter', () => {
+                    gsap.to(edCols[0], { y: -15, rotation: -2, duration: 0.5, ease: "power2.out" });
+                    gsap.to(edCols[1], { y: 15, scale: 1.05, duration: 0.5, ease: "power2.out" });
+                    gsap.to(edCols[2], { y: -10, rotation: 2, duration: 0.5, ease: "power2.out" });
+                });
+
+                svc3.addEventListener('mouseleave', () => {
+                    gsap.to(edCols, { y: 0, rotation: 0, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" });
+                });
+            }
+
+            // SERVICE 04: Character IP Tracking & Dynamic Reaction
+            const svc4 = document.querySelector('[data-service="4"]');
+            if (svc4) {
+                const ipBox = document.getElementById('ip-preview-box');
+                const ipHead = document.getElementById('ip-character-head');
+                const eyeLeft = document.getElementById('ip-eye-left');
+                const eyeRight = document.getElementById('ip-eye-right');
+                const ipMouth = document.getElementById('ip-mouth');
+
+                ipBox.addEventListener('mousemove', (e) => {
+                    const rect = ipBox.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left - rect.width / 2;
+                    const mouseY = e.clientY - rect.top - rect.height / 2;
+
+                    // Subtle Head Tilt Parallax
+                    gsap.to(ipHead, {
+                        x: mouseX * 0.15,
+                        y: mouseY * 0.15,
+                        rotation: mouseX * 0.05,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+
+                    // Eye Tracking pupil movement
+                    gsap.to([eyeLeft, eyeRight], {
+                        x: mouseX * 0.1,
+                        y: mouseY * 0.1,
+                        duration: 0.2,
+                        ease: "power2.out"
+                    });
+                });
+
+                svc4.addEventListener('mouseenter', () => {
+                    gsap.to(ipMouth, { width: "24px", height: "8px", borderRadius: "9999px", backgroundColor: "#FFFFFF", duration: 0.3 });
+                });
+
+                svc4.addEventListener('mouseleave', () => {
+                    gsap.to(ipHead, { x: 0, y: 0, rotation: 0, duration: 0.6, ease: "elastic.out(1, 0.4)" });
+                    gsap.to([eyeLeft, eyeRight], { x: 0, y: 0, duration: 0.4 });
+                    gsap.to(ipMouth, { width: "40px", height: "6px", backgroundColor: "#365CFF", duration: 0.3 });
+                });
+            }
+
+            // Works Cards Fade Entrance
+            gsap.from('.work-card', {
+                scrollTrigger: {
+                    trigger: '#works',
+                    start: 'top 70%',
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html>
